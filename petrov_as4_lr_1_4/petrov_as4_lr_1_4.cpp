@@ -30,11 +30,11 @@ int main() {
 
 		switch (choice) {
 		case 1: {
-			new_pipe = pipe_input();
+			 pipe_input(new_pipe);
 			break;
 		}
 		case 2: {
-			new_station = station_input();
+			station_input(new_station);
 			break;
 		}
 		case 3: {

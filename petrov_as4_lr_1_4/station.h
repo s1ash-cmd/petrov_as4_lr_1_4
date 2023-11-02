@@ -11,7 +11,7 @@ public:
 	double eff;
 };
 
-station station_input();
+void station_input(station& new_station);
 void station_output(const station& new_station);
 void station_change_status(station& new_station);
 void write_station_file(station new_station, pipe new_pipe);

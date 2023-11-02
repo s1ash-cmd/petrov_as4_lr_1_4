@@ -4,9 +4,7 @@
 #include "pipe.h"
 #include "check_input.h"
 
-pipe pipe_input() {
-	pipe new_pipe;
-
+void pipe_input(pipe& new_pipe) {
 	cout << "enter pipe name: ";
 	cin.ignore();
 	getline(cin, new_pipe.pname);
@@ -19,8 +17,6 @@ pipe pipe_input() {
 
 	cout << "is the pipe under repair? (1 - yes, 0 - no): ";
 	check_input_bool(new_pipe.repair);
-
-	return new_pipe;
 }
 
 void pipe_output(const pipe& new_pipe) {

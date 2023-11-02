@@ -11,7 +11,7 @@ public:
 	bool repair;
 };
 
-pipe pipe_input();
+void pipe_input(pipe& new_pipe);
 void pipe_output(const pipe& new_pipe);
 void pipe_change_status(pipe& new_pipe);
 void write_pipe_file(pipe new_pipe);

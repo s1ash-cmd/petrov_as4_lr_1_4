@@ -5,8 +5,7 @@
 #include "station.h"
 #include "check_input.h"
 
-station station_input() {
-	station new_station;
+void station_input(station& new_station) {
 
 	cout << "enter station name ";
 	cin.ignore();
@@ -30,7 +29,6 @@ station station_input() {
 		cout << "incorrect input! try again ";
 		check_input_double(new_station.eff);
 	}
-	return new_station;
 }
 
 void station_output(const station& new_station) {
