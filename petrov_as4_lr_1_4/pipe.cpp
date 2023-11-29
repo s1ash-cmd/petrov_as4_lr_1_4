@@ -2,38 +2,21 @@
 #include <fstream>
 
 #include "pipe.h"
-#include "check_input.h"
+#include "header.h"
 
 void pipe_input(pipe& new_pipe) {
 	cout << "enter pipe name: ";
-	cin.ignore();
 	getline(cin, new_pipe.pname);
 
 	cout << "enter pipe length: ";
-	check_input_double(new_pipe.length);
+	check_input(new_pipe.length);
 
 	cout << "enter pipe diameter: ";
-	check_input_double(new_pipe.diameter);
+	check_input(new_pipe.diameter);
 
 	cout << "is the pipe under repair? (1 - yes, 0 - no): ";
-	check_input_bool(new_pipe.repair);
+	check_input(new_pipe.repair);
 }
-
-//void pipe_input(pipe& new_pipe) {
-//	cout << "enter pipe name: ";
-//	cin.ignore();
-//	getline(cin, new_pipe.pname);
-//
-//	cout << "enter pipe length: ";
-//	check_input(new_pipe.length);
-//
-//	cout << "enter pipe diameter: ";
-//	check_input(new_pipe.diameter);
-//
-//	cout << "is the pipe under repair? (1 - yes, 0 - no): ";
-//	check_input(new_pipe.repair);
-//}
-
 
 void pipe_output(const pipe& new_pipe) {
 	if (new_pipe.pname.empty()) {

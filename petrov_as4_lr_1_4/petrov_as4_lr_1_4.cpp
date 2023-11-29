@@ -1,17 +1,18 @@
 ﻿#include <iostream>
 #include <string>
 #include <fstream>
+#include <unordered_map>
 
+#include "header.h"
 #include "pipe.h"
 #include "station.h"
-#include "check_input.h"
 
 using namespace std;
 
 int main() {
 	int choice;
-	pipe new_pipe;
-	station new_station;
+	unordered_map <int, pipe> pipes;
+	unordered_map <int, station> stations;
 
 	for (;;) {
 		cout << "\n_____menu_____" << endl;
@@ -26,26 +27,35 @@ int main() {
 		cout << "===============================" << endl;
 		cout << "enter a number ";
 
-		check_input_int(choice);
+		check_input(choice);
 
 		switch (choice) {
 		case 1: {
-			 pipe_input(new_pipe);
+			pipe new_pipe;
+			pipe_input(new_pipe);
+			pipes[pipes.size() + 1] = new_pipe;
 			break;
 		}
 		case 2: {
+			station new_station;
 			station_input(new_station);
+			stations[stations.size() + 1] = new_station;
 			break;
 		}
 		case 3: {
-			cout << "\npipe:" << endl;
-			pipe_output(new_pipe);
+			for (auto& new_pipe : pipes) {
+				cout << "\npipe:" << endl;
+				pipe_output(new_pipe.second);
+			}
 
-			cout << "\nstaion:" << endl;
-			station_output(new_station);
+
+			for (auto& new_station : stations) {
+				cout << "\nstaion:" << endl;
+				station_output(new_station.second);
+			}
 			break;
 		}
-		case 4: {
+		/*case 4: {
 			if (!new_pipe.pname.empty()) {
 				pipe_change_status(new_pipe);
 			}
@@ -72,12 +82,12 @@ int main() {
 			read_pipe_file(new_pipe);
 			read_station_file(new_station);
 			break;
-		}
+		}*/
 		case 0: {
 			return 0;
 		}
 		default:
-			cout << "wrong choice. enter again " << endl;
+			cout << "incorrect input! try again " << endl;
 			break;
 		}
 	}

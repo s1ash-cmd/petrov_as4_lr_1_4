@@ -3,31 +3,30 @@
 
 #include "pipe.h"
 #include "station.h"
-#include "check_input.h"
+#include "header.h"
 
 void station_input(station& new_station) {
 
 	cout << "enter station name ";
-	cin.ignore();
 	getline(cin, new_station.sname);
 
 	cout << "enter the number of workshops ";
-	check_input_int(new_station.number_of_workshops);
+	check_input(new_station.number_of_workshops);
 
 	cout << "enter the number of workshops in work ";
-	check_input_int(new_station.workshops_in_work);
+	check_input(new_station.workshops_in_work);
 
 	while (new_station.number_of_workshops < new_station.workshops_in_work) {
 		cout << "the number of working workshops cant be more than the total number of workshops" << endl << "enter again ";
-		check_input_int(new_station.workshops_in_work);
+		check_input(new_station.workshops_in_work);
 	}
 
 	cout << "enter eff (0.0 - 1.0) ";
-	check_input_double(new_station.eff);
+	check_input(new_station.eff);
 
 	while (new_station.eff > 1) {
 		cout << "incorrect input! try again ";
-		check_input_double(new_station.eff);
+		check_input(new_station.eff);
 	}
 }
 
@@ -48,11 +47,11 @@ void station_change_status(station& new_station) {
 	cout << "the number of workshops: " << new_station.number_of_workshops << endl;
 	cout << "the number of working workshops: " << new_station.workshops_in_work << endl;
 	cout << "enter new number of working workshops: ";
-	check_input_int(new_station.workshops_in_work);
+	check_input(new_station.workshops_in_work);
 
 	while (new_station.number_of_workshops < new_station.workshops_in_work) {
 		cout << "the number of working workshops cant be more than the total number of workshops" << endl << "enter again ";
-		check_input_int(new_station.workshops_in_work);
+		check_input(new_station.workshops_in_work);
 	}
 }
 
