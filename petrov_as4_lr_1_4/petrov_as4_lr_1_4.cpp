@@ -114,7 +114,7 @@ int main() {
 
 					cout << "\nenter the id of the station to edit ";
 					int da = check_input(1, nextstationid - 1);
-					station_edit(stations, new_station.id);
+					station_edit(stations, da);
 				}
 				break;
 			}
@@ -143,32 +143,34 @@ int main() {
 		}
 		case 3: {
 			cout << "\npipes:" << endl;
-			pipe_output(pipes);
+			pipe_output(pipes, true, "");
 
 			cout << "\nstations:" << endl;
 			station_output(stations);
 			break;
 		}
+		case 4: {
+			cout << "Enter pipe name to search: ";
+			string nazvanie;
+			cin.ignore();
+			getline(cin, nazvanie);
+			//pipe_output(pipes, true, nazvanie);
+			break;
+		}
+		/*case 5: {
 
-
-			  /*case 4: {
-
-					  break;
-				  }
-				  case 5: {
-
-					  break;
-				  }
-				  case 6: {
-					  write_pipe_file(new_pipe);
-					  write_station_file(new_station, new_pipe);
-					  break;
-				  }
-				  case 7: {
-					  read_pipe_file(new_pipe);
-					  read_station_file(new_station);
-					  break;
-				  }*/
+			break;
+		}
+		case 6: {
+			write_pipe_file(new_pipe);
+			write_station_file(new_station, new_pipe);
+			break;
+		}
+		case 7: {
+			read_pipe_file(new_pipe);
+			read_station_file(new_station);
+			break;
+		}*/
 
 		case 0: {
 			return 0;

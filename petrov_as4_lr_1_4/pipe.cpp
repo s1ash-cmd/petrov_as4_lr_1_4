@@ -60,22 +60,27 @@ void pipe_edit(unordered_map<int, pipe>& pipes, int id) {
 
 }
 
-void pipe_output(const unordered_map<int, pipe>& pipes) {
+void pipe_output(const unordered_map<int, pipe>& pipes, bool inRepair, const string& nazvanie) {
 	if (pipes.empty()) {
 		cout << "no pipes found" << endl;
 	}
-
 	else {
 		for (const auto& pair : pipes) {
 			const pipe& new_pipe = pair.second;
-			cout << "pipe id is " << new_pipe.id << endl;
-			cout << "pipe name is " << new_pipe.pname << endl;
-			cout << "pipe length is " << new_pipe.length << endl;
-			cout << "pipe diameter is " << new_pipe.diameter << endl;
-			cout << "pipe under repair? " << new_pipe.repair << endl;
+			bool matchName = nazvanie.empty() || new_pipe.sravnenie(nazvanie);
+			bool matchRepair = inRepair || new_pipe.repair;
+
+			if (matchName && matchRepair) {
+				cout << "\npipe id is " << new_pipe.id << endl;
+				cout << "pipe name is " << new_pipe.pname << endl;
+				cout << "pipe length is " << new_pipe.length << endl;
+				cout << "pipe diameter is " << new_pipe.diameter << endl;
+				cout << "pipe under repair? " << new_pipe.repair << endl;
+			}
 		}
 	}
 }
+
 
 void write_pipe_file(pipe new_pipe) {
 	ofstream file_out;
