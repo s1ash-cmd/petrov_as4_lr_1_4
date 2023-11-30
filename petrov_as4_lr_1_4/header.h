@@ -4,16 +4,14 @@
 using namespace std;
 
 template <typename T>
-void check_input(T& x) {
-	while (true) {
-		if (cin >> x && x >= 0) {
-			char nextChar = cin.get();
-			if (nextChar == '\n' || nextChar == ' ' || nextChar == '\t') {
-				break;
-			}
-		}
+T check_input(T min, T max)
+{
+	T x;
+	while ((cin >> x).fail() || (cin).peek() != '\n' || x < min || x > max)
+	{
 		cin.clear();
-		cin.ignore(10000, '\n');
-		cout << "incorrect input! try again ";
+		cin.ignore(100000, '\n');
+		cout << "\nenter the correct data (" << min << " - " << max << ") ";
 	}
+	return x;
 }
