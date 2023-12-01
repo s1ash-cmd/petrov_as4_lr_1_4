@@ -35,11 +35,13 @@ int main() {
 			cout << "\n1) add" << endl;
 			cout << "2) edit" << endl;
 			cout << "3) delete" << endl;
+			cout << "4) search by name" << endl;
+			cout << "5) search by repair status" << endl;
 			cout << "0) go back" << endl;
 			cout << "enter a number ";
 			pipe new_pipe;
 
-			int choicepipe = check_input(0, 3);
+			int choicepipe = check_input(0, 5);
 
 			switch (choicepipe) {
 			case 1: {
@@ -78,6 +80,30 @@ int main() {
 					int da = check_input(1, nextpipeid - 1);
 					pipe_delete(pipes, da);
 				}
+				break;
+			}
+			case 4: {
+				cout << "enter pipe name to search: ";
+				string nazvanie;
+				cin.ignore();
+				getline(cin, nazvanie);
+				pipe_output(pipes, nazvanie);		
+				break;
+			}
+
+			case 5: {
+				cout << "search by repair status (0 - 1): ";
+				
+				bool status = check_input(0, 1);
+				
+				if (status == true) {
+					pipe_output(pipes, "", false, true);
+				}
+
+				else {
+					pipe_output(pipes, "", true, false);
+				}
+
 				break;
 			}
 			case 0: {
@@ -143,20 +169,13 @@ int main() {
 		}
 		case 3: {
 			cout << "\npipes:" << endl;
-			pipe_output(pipes, true, "");
+			pipe_output(pipes);
 
 			cout << "\nstations:" << endl;
 			station_output(stations);
 			break;
 		}
-		case 4: {
-			cout << "Enter pipe name to search: ";
-			string nazvanie;
-			cin.ignore();
-			getline(cin, nazvanie);
-			//pipe_output(pipes, true, nazvanie);
-			break;
-		}
+		
 		/*case 5: {
 
 			break;

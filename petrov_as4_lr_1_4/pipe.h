@@ -19,6 +19,6 @@ public:
 void pipe_input(pipe& new_pipe, int id);
 void pipe_delete(unordered_map<int, pipe>& pipes, int id);
 void pipe_edit(unordered_map<int, pipe>& pipes, int id);
-void pipe_output(const unordered_map<int, pipe>& pipes, bool inRepair, const string& nazvanie = "");
+void pipe_output(const unordered_map<int, pipe>& pipes, const string& nazvanie = "", bool inrepair = true, bool notinrepair = true);
 void write_pipe_file(pipe new_pipe);
 //void read_pipe_file(pipe& new_pipe);

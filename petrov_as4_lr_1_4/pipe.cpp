@@ -38,21 +38,10 @@ void pipe_edit(unordered_map<int, pipe>& pipes, int id) {
 	auto it = pipes.find(id);
 	if (it != pipes.end()) {
 		pipe& edited_pipe = it->second;
-
-		cout << "enter new pipe name: ";
-		cin.ignore();
-		getline(cin, edited_pipe.pname);
-
-		cout << "enter new pipe length: ";
-		edited_pipe.length = check_input(0.0, 100000.0);
-
-		cout << "enter new pipe diameter: ";
-		edited_pipe.diameter = check_input(400, 1800);
-
-		cout << "is the pipe under repair? (1 - yes, 0 - no): ";
-		edited_pipe.repair = check_input(0, 1);
-
+		edited_pipe.repair = !edited_pipe.repair;
+		
 		cout << "pipe with id " << id << " edited successfully" << endl;
+		cout << "new pipe repair status is: " << edited_pipe.repair << endl;
 	}
 	else {
 		cout << "pipe with id " << id << " not found" << endl;
@@ -60,17 +49,14 @@ void pipe_edit(unordered_map<int, pipe>& pipes, int id) {
 
 }
 
-void pipe_output(const unordered_map<int, pipe>& pipes, bool inRepair, const string& nazvanie) {
+void pipe_output(const unordered_map<int, pipe>& pipes, const string& nazvanie, bool inrepair, bool notinrepair) {
 	if (pipes.empty()) {
 		cout << "no pipes found" << endl;
 	}
 	else {
 		for (const auto& pair : pipes) {
 			const pipe& new_pipe = pair.second;
-			bool matchName = nazvanie.empty() || new_pipe.sravnenie(nazvanie);
-			bool matchRepair = inRepair || new_pipe.repair;
-
-			if (matchName && matchRepair) {
+			if ((inrepair && new_pipe.repair) || (notinrepair && !new_pipe.repair) || nazvanie.empty() || new_pipe.sravnenie(nazvanie)) {
 				cout << "\npipe id is " << new_pipe.id << endl;
 				cout << "pipe name is " << new_pipe.pname << endl;
 				cout << "pipe length is " << new_pipe.length << endl;
@@ -80,7 +66,6 @@ void pipe_output(const unordered_map<int, pipe>& pipes, bool inRepair, const str
 		}
 	}
 }
-
 
 void write_pipe_file(pipe new_pipe) {
 	ofstream file_out;

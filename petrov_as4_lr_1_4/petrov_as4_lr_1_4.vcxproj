@@ -127,11 +127,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="gts.cpp" />
     <ClCompile Include="petrov_as4_lr_1_4.cpp" />
     <ClCompile Include="pipe.cpp" />
     <ClCompile Include="station.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="gts.h" />
     <ClInclude Include="header.h" />
     <ClInclude Include="pipe.h" />
     <ClInclude Include="station.h" />
