@@ -1,203 +1,86 @@
 ﻿#include <iostream>
-#include <string>
 #include <fstream>
 #include <unordered_map>
+#include <chrono>
+#include <format>
 
-#include "header.h"
 #include "pipe.h"
 #include "station.h"
+#include "header.h"
+#include "gts.h"
 
 using namespace std;
+using namespace chrono;
 
 int main() {
-	int nextpipeid = 1;
-	int nextstationid = 1;
+	redirected_output cerr_out(cerr);
+	string time = std::format("{:%d_%m_%Y %H_%M_%OS}", system_clock::now());
+	ofstream logfile("log_" + time + ".txt");
+	if (logfile) {
+		cerr_out.redirect(logfile);
+	}
+
 	unordered_map <int, pipe> pipes;
 	unordered_map <int, station> stations;
 
+	gts sistema;
 	for (;;) {
-		cout << "\n_____menu_____" << endl;
-		cout << "1) working with pipes" << endl;
-		cout << "2) working with stations" << endl;
-		cout << "3) see all objets" << endl;
-		cout << "4) edit pipe status" << endl;
-		cout << "5) edit workstations in work" << endl;
-		cout << "6) save to file" << endl;
-		cout << "7) load from file" << endl;
-		cout << "0) exit" << endl;
-		cout << "===============================" << endl;
-		cout << "enter a number ";
-
-		int choice = check_input(0, 7);
+		sistema.printmenu();
+		int choice = check_input(0, 9);
 
 		switch (choice) {
 		case 1: {
-			cout << "\n1) add" << endl;
-			cout << "2) edit" << endl;
-			cout << "3) delete" << endl;
-			cout << "4) search by name" << endl;
-			cout << "5) search by repair status" << endl;
-			cout << "0) go back" << endl;
-			cout << "enter a number ";
 			pipe new_pipe;
-
-			int choicepipe = check_input(0, 5);
-
-			switch (choicepipe) {
-			case 1: {
-				pipe_input(new_pipe, nextpipeid);
-				pipes[nextpipeid++] = new_pipe;
-				break;
-			}
-			case 2: {
-				if (pipes.empty()) {
-					cout << "no pipes found" << endl;
-				}
-
-				else {
-					cout << "\navailable pipes:";
-					for (const auto& pair : pipes) {
-						cout << " " << pair.first;
-					}
-
-					cout << "\nenter the id of the pipe to edit ";
-					int da = check_input(1, nextpipeid - 1);
-					pipe_edit(pipes, new_pipe.id);
-				}
-				break;
-			}
-			case 3: {
-				if (pipes.empty()) {
-					cout << "no pipes found" << endl;
-				}
-				else {
-					cout << "\navailable pipes:";
-					for (const auto& pair : pipes) {
-						cout << " " << pair.first;
-					}
-
-					cout << "\nenter the id of the pipe to delete ";
-					int da = check_input(1, nextpipeid - 1);
-					pipe_delete(pipes, da);
-				}
-				break;
-			}
-			case 4: {
-				cout << "enter pipe name to search: ";
-				string nazvanie;
-				cin.ignore();
-				getline(cin, nazvanie);
-				pipe_output(pipes, nazvanie);		
-				break;
-			}
-
-			case 5: {
-				cout << "search by repair status (0 - 1): ";
-				
-				bool status = check_input(0, 1);
-				
-				if (status == true) {
-					pipe_output(pipes, "", false, true);
-				}
-
-				else {
-					pipe_output(pipes, "", true, false);
-				}
-
-				break;
-			}
-			case 0: {
-				break;
-			}
-			}
+			cin >> new_pipe;
+			pipes.insert({ new_pipe.getid(),new_pipe });
 			break;
 		}
 		case 2: {
-			cout << "\n1) add" << endl;
-			cout << "2) edit" << endl;
-			cout << "3) delete" << endl;
-			cout << "enter a number ";
 			station new_station;
-
-			int choicestation = check_input(0, 3);
-
-			switch (choicestation) {
-			case 1: {
-				station_input(new_station, nextstationid);
-				stations[nextstationid++] = new_station;
-				break;
-			}
-			case 2: {
-				if (stations.empty()) {
-					cout << "no stations found" << endl;
-				}
-
-				else {
-					cout << "\navailable stations:";
-					for (const auto& pair : stations) {
-						cout << " " << pair.first;
-					}
-
-					cout << "\nenter the id of the station to edit ";
-					int da = check_input(1, nextstationid - 1);
-					station_edit(stations, da);
-				}
-				break;
-			}
-			case 3: {
-				if (stations.empty()) {
-					cout << "no stations found" << endl;
-				}
-
-				else {
-					cout << "\navailable stations:";
-					for (const auto& pair : stations) {
-						cout << " " << pair.first;
-					}
-
-					cout << "\nenter the id of the station to delete ";
-					int da = check_input(1, nextstationid - 1);
-					station_delete(stations, da);
-				}
-				break;
-			}
-			case 0: {
-				break;
-			}
-			}
+			cin >> new_station;
+			stations.insert({ new_station.getid(),new_station });
 			break;
 		}
 		case 3: {
-			cout << "\npipes:" << endl;
-			pipe_output(pipes);
-
-			cout << "\nstations:" << endl;
-			station_output(stations);
+			sistema.pipe_output(pipes);
+			sistema.station_output(stations);
 			break;
 		}
-		
-		/*case 5: {
 
+		case 4: {
+			sistema.pipe_edit(pipes);
 			break;
 		}
+		case 5: {
+			sistema.station_edit(stations);
+			break;
+		}
+
 		case 6: {
-			write_pipe_file(new_pipe);
-			write_station_file(new_station, new_pipe);
+			sistema.pipe_delete(pipes);
 			break;
 		}
-		case 7: {
-			read_pipe_file(new_pipe);
-			read_station_file(new_station);
-			break;
-		}*/
 
+		case 7: {
+			sistema.station_delete(stations);
+			break;
+		}
+
+		case 8: {
+			sistema.data_write(pipes, stations);
+			break;
+		}
+		case 9: {
+			sistema.data_read(pipes, stations);
+			break;
+		}
 		case 0: {
 			return 0;
 		}
-		default:
-			cout << "incorrect input! try again " << endl;
-			break;
 		}
-
 	}
+	return 0;
 }
+
+
+

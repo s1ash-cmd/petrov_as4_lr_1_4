@@ -4,17 +4,20 @@
 using namespace std;
 
 class station {
-public:
 	int id;
-	string sname;
-	int number_of_workshops;
-	int workshops_in_work;
-	double eff;
-};
+public:
+	string sname = "";
+	int number_of_workshops = 0;
+	int workshops_in_work = 0;
+	double eff = 0.0;
 
-void station_input(station& new_station, int id);
-void station_delete(unordered_map<int, station>& stations, int id);
-void station_edit(unordered_map<int, station>& stations, int id);
-void station_output(const unordered_map<int, station>& stations);
-void write_station_file(station new_station, pipe new_pipe);
-//void read_station_file(station& new_station);
+	static int ID;
+	station();
+
+	friend istream& operator >> (istream& in, station& new_station);
+	friend ostream& operator << (ostream& out, station& new_station);
+	friend ofstream& operator << (ofstream& fout, station& new_station);
+	friend ifstream& operator >> (ifstream& fin, station& new_station);
+
+	int getid() { return id; };
+};

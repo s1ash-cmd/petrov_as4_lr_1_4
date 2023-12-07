@@ -4,21 +4,20 @@
 using namespace std;
 
 class pipe {
-public:
 	int id;
-	string pname;
-	double length;
-	double diameter;
-	bool repair;
+public:
+	string pname = "";
+	double length = 0;
+	double diameter = 0;
+	bool repair = false;
 
-	bool sravnenie(const string& nazvanie) const {
-		return pname.find(nazvanie) != string::npos;
-	}
+	static int ID;
+	pipe();
+
+	friend istream& operator >> (istream& in, pipe& new_pipe);
+	friend ostream& operator << (ostream& out, pipe& new_pipe);
+	friend ofstream& operator << (ofstream& fout, pipe& new_pipe);
+	friend ifstream& operator >> (ifstream& fin, pipe& new_pipe);
+
+	int getid() { return id; };
 };
-
-void pipe_input(pipe& new_pipe, int id);
-void pipe_delete(unordered_map<int, pipe>& pipes, int id);
-void pipe_edit(unordered_map<int, pipe>& pipes, int id);
-void pipe_output(const unordered_map<int, pipe>& pipes, const string& nazvanie = "", bool inrepair = true, bool notinrepair = true);
-void write_pipe_file(pipe new_pipe);
-//void read_pipe_file(pipe& new_pipe);

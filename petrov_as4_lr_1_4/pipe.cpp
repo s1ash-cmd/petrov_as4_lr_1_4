@@ -1,15 +1,21 @@
-#include <iostream>
-#include <fstream>
-#include <unordered_map>
-
 #include "pipe.h"
 #include "header.h"
 
-void pipe_input(pipe& new_pipe, int id) {
-	new_pipe.id = id;
+#include <unordered_map>
+#include <fstream>
 
+using namespace std;
+
+int pipe::ID = 1;
+
+pipe::pipe()
+{
+	id = ID++;
+}
+
+istream& operator>>(istream& in, pipe& new_pipe){
 	cout << "enter pipe name: ";
-	cin.ignore();
+	in.ignore();
 	getline(cin, new_pipe.pname);
 
 	cout << "enter pipe length: ";
@@ -20,91 +26,29 @@ void pipe_input(pipe& new_pipe, int id) {
 
 	cout << "is the pipe under repair? (1 - yes, 0 - no): ";
 	new_pipe.repair = check_input(0, 1);
+	return in;
 }
 
-void pipe_delete(unordered_map<int, pipe>& pipes, int id) {
-	auto it = pipes.find(id);
-	if (it != pipes.end()) {
-		pipes.erase(it);
-		cout << "pipe with id " << id << "has been deleted" << endl;
-	}
-	else {
-		cout << "no pipe found with that id " << endl;
-	}
+ostream& operator<<(ostream& out, pipe& new_pipe) {
+	out << "\npipe id is: " << new_pipe.getid() << endl;
+	out << "pipe name is: " << new_pipe.pname << endl;
+	out << "pipe length is: " << new_pipe.length << endl;
+	out << "pipe diameter is: " << new_pipe.diameter << endl;
+	out << "pipe under repair? " << new_pipe.repair << endl;
+	out << "--------------------------------" << endl;
+	return out;
 }
 
-void pipe_edit(unordered_map<int, pipe>& pipes, int id) {
-
-	auto it = pipes.find(id);
-	if (it != pipes.end()) {
-		pipe& edited_pipe = it->second;
-		edited_pipe.repair = !edited_pipe.repair;
-		
-		cout << "pipe with id " << id << " edited successfully" << endl;
-		cout << "new pipe repair status is: " << edited_pipe.repair << endl;
-	}
-	else {
-		cout << "pipe with id " << id << " not found" << endl;
-	}
-
+ofstream& operator<<(ofstream& fout, pipe& new_pipe){
+	fout << new_pipe.pname << endl << new_pipe.length << endl << new_pipe.diameter << endl << new_pipe.repair << endl;
+	return fout;
 }
 
-void pipe_output(const unordered_map<int, pipe>& pipes, const string& nazvanie, bool inrepair, bool notinrepair) {
-	if (pipes.empty()) {
-		cout << "no pipes found" << endl;
-	}
-	else {
-		for (const auto& pair : pipes) {
-			const pipe& new_pipe = pair.second;
-			if ((inrepair && new_pipe.repair) || (notinrepair && !new_pipe.repair) || nazvanie.empty() || new_pipe.sravnenie(nazvanie)) {
-				cout << "\npipe id is " << new_pipe.id << endl;
-				cout << "pipe name is " << new_pipe.pname << endl;
-				cout << "pipe length is " << new_pipe.length << endl;
-				cout << "pipe diameter is " << new_pipe.diameter << endl;
-				cout << "pipe under repair? " << new_pipe.repair << endl;
-			}
-		}
-	}
+ifstream& operator>>(ifstream& fin, pipe& new_pipe){
+	fin.ignore();
+	getline(fin, new_pipe.pname);
+	fin >> new_pipe.length;
+	fin >> new_pipe.diameter;
+	fin >> new_pipe.repair;
+	return fin;
 }
-
-void write_pipe_file(pipe new_pipe) {
-	ofstream file_out;
-
-	file_out.open("file.txt");
-	if (!new_pipe.pname.empty()) {
-		if (file_out.is_open()) {
-			file_out << "pipe: " << endl;
-			file_out << new_pipe.pname << endl << new_pipe.length << endl
-				<< new_pipe.diameter << endl << new_pipe.repair << endl;
-		}
-		else {
-			cout << "couldnt open file" << endl;
-		}
-		file_out.close();
-	}
-	else {
-		cout << "no pipe found" << endl;
-	}
-}
-
-//void read_pipe_file(pipe& new_pipe) {
-//	ifstream file_in;
-//	string pstr;
-//	file_in.open("file.txt");
-//	if (file_in.is_open()) {
-//		while (getline(file_in, pstr)) {
-//			if (pstr == "pipe: ") {
-//				cout << pstr << endl;
-//				file_in >> new_pipe.pname;
-//				file_in >> new_pipe.length;
-//				file_in >> new_pipe.diameter;
-//				file_in >> new_pipe.repair;
-//				pipe_output(pipes);
-//			}
-//		}
-//		file_in.close();
-//	}
-//	else {
-//		cout << "file couldnt be open " << endl;
-//	}
-//}
