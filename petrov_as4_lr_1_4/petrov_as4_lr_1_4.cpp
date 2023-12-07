@@ -1,84 +1,86 @@
 ﻿#include <iostream>
-#include <string>
 #include <fstream>
+#include <unordered_map>
+#include <chrono>
+#include <format>
 
 #include "pipe.h"
 #include "station.h"
-#include "check_input.h"
+#include "header.h"
+#include "gts.h"
 
 using namespace std;
+using namespace chrono;
 
 int main() {
-	int choice;
-	pipe new_pipe;
-	station new_station;
+	redirected_output cerr_out(cerr);
+	string time = std::format("{:%d_%m_%Y %H_%M_%OS}", system_clock::now());
+	ofstream logfile("log_" + time + ".txt");
+	if (logfile) {
+		cerr_out.redirect(logfile);
+	}
 
+	unordered_map <int, pipe> pipes;
+	unordered_map <int, station> stations;
+
+	gts sistema;
 	for (;;) {
-		cout << "\n_____menu_____" << endl;
-		cout << "1) add new pipe" << endl;
-		cout << "2) add new station" << endl;
-		cout << "3) see all objets" << endl;
-		cout << "4) edit pipe status" << endl;
-		cout << "5) edit workstations in work" << endl;
-		cout << "6) save to file" << endl;
-		cout << "7) load from file" << endl;
-		cout << "0) exit" << endl;
-		cout << "===============================" << endl;
-		cout << "enter a number ";
-
-		check_input_int(choice);
+		sistema.printmenu();
+		int choice = check_input(0, 9);
 
 		switch (choice) {
 		case 1: {
-			 pipe_input(new_pipe);
+			pipe new_pipe;
+			cin >> new_pipe;
+			pipes.insert({ new_pipe.getid(),new_pipe });
 			break;
 		}
 		case 2: {
-			station_input(new_station);
+			station new_station;
+			cin >> new_station;
+			stations.insert({ new_station.getid(),new_station });
 			break;
 		}
 		case 3: {
-			cout << "\npipe:" << endl;
-			pipe_output(new_pipe);
-
-			cout << "\nstaion:" << endl;
-			station_output(new_station);
+			sistema.pipe_output(pipes);
+			sistema.station_output(stations);
 			break;
 		}
+
 		case 4: {
-			if (!new_pipe.pname.empty()) {
-				pipe_change_status(new_pipe);
-			}
-			else {
-				cout << "no pipe found" << endl;
-			}
+			sistema.pipe_edit(pipes);
 			break;
 		}
 		case 5: {
-			if (!new_station.sname.empty()) {
-				station_change_status(new_station);
-			}
-			else {
-				cout << "no station found" << endl;
-			}
+			sistema.station_edit(stations);
 			break;
 		}
+
 		case 6: {
-			write_pipe_file(new_pipe);
-			write_station_file(new_station, new_pipe);
+			sistema.pipe_delete(pipes);
 			break;
 		}
+
 		case 7: {
-			read_pipe_file(new_pipe);
-			read_station_file(new_station);
+			sistema.station_delete(stations);
+			break;
+		}
+
+		case 8: {
+			sistema.data_write(pipes, stations);
+			break;
+		}
+		case 9: {
+			sistema.data_read(pipes, stations);
 			break;
 		}
 		case 0: {
 			return 0;
 		}
-		default:
-			cout << "wrong choice. enter again " << endl;
-			break;
 		}
 	}
+	return 0;
 }
+
+
+

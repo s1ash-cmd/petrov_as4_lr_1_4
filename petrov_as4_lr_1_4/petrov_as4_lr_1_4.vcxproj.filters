@@ -24,7 +24,7 @@
     <ClCompile Include="station.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="check_input.cpp">
+    <ClCompile Include="gts.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>
@@ -35,7 +35,10 @@
     <ClInclude Include="station.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="check_input.h">
+    <ClInclude Include="header.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="gts.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>

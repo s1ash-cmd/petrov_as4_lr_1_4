@@ -4,15 +4,20 @@
 using namespace std;
 
 class pipe {
+	int id;
 public:
-	string pname;
-	double length;
-	double diameter;
-	bool repair;
-};
+	string pname = "";
+	double length = 0;
+	double diameter = 0;
+	bool repair = false;
 
-void pipe_input(pipe& new_pipe);
-void pipe_output(const pipe& new_pipe);
-void pipe_change_status(pipe& new_pipe);
-void write_pipe_file(pipe new_pipe);
-void read_pipe_file(pipe& new_pipe);
+	static int ID;
+	pipe();
+
+	friend istream& operator >> (istream& in, pipe& new_pipe);
+	friend ostream& operator << (ostream& out, pipe& new_pipe);
+	friend ofstream& operator << (ofstream& fout, pipe& new_pipe);
+	friend ifstream& operator >> (ifstream& fin, pipe& new_pipe);
+
+	int getid() { return id; };
+};
