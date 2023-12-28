@@ -22,7 +22,11 @@ istream& operator>>(istream& in, pipe& new_pipe){
 	new_pipe.length = check_input(0.0, 100000.0);
 
 	cout << "enter pipe diameter: ";
-	new_pipe.diameter = check_input(400, 1800);
+	new_pipe.diameter = check_input(500, 1400);
+	while (new_pipe.diameter != 500 and new_pipe.diameter != 700 and new_pipe.diameter != 1000 and new_pipe.diameter != 1400) {
+		cout << "enter 500, 700, 1000 or 1400 " << endl;
+		new_pipe.diameter = check_input(500, 1400);
+	}
 
 	cout << "is the pipe under repair? (1 - yes, 0 - no): ";
 	new_pipe.repair = check_input(0, 1);

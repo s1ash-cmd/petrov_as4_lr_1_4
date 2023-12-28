@@ -10,6 +10,7 @@ public:
 	int number_of_workshops = 0;
 	int workshops_in_work = 0;
 	double eff = 0.0;
+	int pipes = 0;
 
 	static int ID;
 	station();

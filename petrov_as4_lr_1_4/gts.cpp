@@ -5,6 +5,8 @@
 
 #include <iostream>
 #include <fstream>
+#include <stack>
+#include <queue>
 
 using namespace std;
 
@@ -18,8 +20,11 @@ void gts::printmenu() {
 	cout << "5) edit stations" << endl;
 	cout << "6) delete pipes" << endl;
 	cout << "7) delete stations" << endl;
-	cout << "8) save to file" << endl;
-	cout << "9) load from file" << endl;
+	cout << "8) combine objects" << endl;
+	cout << "9) delete connection" << endl;
+	cout << "10) topological sorting" << endl;
+	cout << "11) save to file" << endl;
+	cout << "12) load from file" << endl;
 	cout << "0) exit" << endl;
 	cout << "===============================" << endl;
 	cout << "enter a number ";
@@ -390,4 +395,209 @@ void gts::data_read(unordered_map<int, pipe>& pipes, unordered_map<int, station>
 	else {
 		cout << "File couldn't be open." << endl;
 	}
+}
+
+void gts::combine(unordered_map <int, station>& stations, unordered_map <int, pipe>& pipes, vector <vector <int> >& matrica) {
+	int idcs1 = 0;
+	int idcs2 = 0;
+	int idp = 0;
+	int piped = 0;
+	if (stations.size() != 0 && stations.size() != 1 && pipes.size() != 0) {
+		station_output(stations);
+		matrica.resize(stations.size() + 1);
+		for (int i = 0; i < matrica.size(); i++) {
+			matrica[i].resize(stations.size() + 1);
+		}
+		cout << "enter the start station id: ";
+		int idcs1 = check_input(1, 500);
+
+		for (int i = 1; i <= stations.size(); i++) {
+			if (stations[i].getid() == idcs1 and stations[i].pipes < 2) {
+				break;
+			}
+			if (i == stations.size()) {
+				cout << "error, try again " << endl;
+				return;
+			}
+		}
+		cout << "enter the end station id: ";
+		int idcs2 = check_input(1, 500);
+		for (int i = 1; i <= stations.size(); i++) {
+			if (stations[i].getid() == idcs2 and stations[i].pipes < 2 and idcs1 != idcs2 and matrica[idcs2][idcs1] == 0) {
+				break;
+			}
+			if (i == stations.size()) {
+				cout << "error, try again " << endl;
+				return;
+			}
+		}
+		stations[idcs1].pipes++;
+		stations[idcs2].pipes++;
+		cout << "--------------------------------" << endl;
+		pipe_output(pipes);
+		cout << "enter 500, 700, 1000 or 1400: " << endl;
+		int piped = check_input(500, 1400);
+		while (piped != 500 and piped != 700 and piped != 1000 and piped != 1400) {
+			cout << "enter 500, 700, 1000 or 1400 " << endl;
+			int piped = check_input(500, 1400);
+		}
+		for (int i = 1; i <= pipes.size(); i++) {
+			if (pipes[i].diameter == piped and pipes[i].used == false) {
+				pipes[i].used = true;
+				idp = pipes[i].getid();
+				break;
+			}
+			else if (i == pipes.size()) {
+				cout << "no free pipes with this diameter. create a new pipe: " << endl;
+				pipe edge;
+				cin >> edge;
+				edge.used = true;
+				idp = edge.getid();
+				while (edge.diameter != piped) {
+					cout << "create a pipe with diameter = " << piped << ". " << endl;
+					cin >> edge;
+					edge.used = true;
+					idp = edge.getid();
+				}
+				pipes.insert({ edge.getid(), edge });
+				break;
+			}
+		}
+		matrica[idcs1][idcs2] = idp;
+		viewgts(matrica);
+	}
+	else {
+		cout << "not enough data to combine " << endl;
+	}
+}
+
+void gts::deleteconnection(unordered_map <int, pipe>& pipes, unordered_map<int, station>& stations, vector < vector <int> >& matrica) {
+	int idp;
+	if (matrica.empty()) {
+		cout << "no gts found" << endl;
+	}
+
+	else {
+		cout << "enter the start station id: ";
+		int idcs1 = check_input(1, 500);
+		for (int i = 1; i <= stations.size(); i++) {
+			if (stations[i].getid() == idcs1) {
+				break;
+			}
+			if (i == stations.size()) {
+				cout << "no stations selected " << endl;
+				return;
+			}
+		}
+		cout << "enter the end station id: ";
+		int idcs2 = check_input(1, 500);
+		for (int i = 1; i <= stations.size(); i++) {
+			if (stations[i].getid() == idcs2) {
+				break;
+			}
+			if (i == stations.size()) {
+				cout << "no stations selected " << endl;
+				return;
+			}
+		}
+		if (matrica[idcs1][idcs2] != 0) {
+			idp = matrica[idcs1][idcs2];
+			pipes[idp].used = false;
+			matrica[idcs1][idcs2] = 0;
+			stations[idcs1].pipes -= 1;
+			stations[idcs2].pipes -= 1;
+			cout << "connection deleted " << endl;
+		}
+		else {
+			cout << "no such connection " << endl;
+		}
+	}
+}
+
+void gts::viewgts(vector<vector<int>>& matrica) {
+	if (matrica.empty()) {
+		cout << "no gts found" << endl;
+
+	}
+	else {
+		cout << "\ngts:" << endl;
+		for (int i = 1; i < matrica.size(); i++) {
+			if (matrica[i - 1].size() > 0) {
+				cout << "station id: " << i << " \linked pipes: ";
+				for (int j = 1; j < matrica.size(); j++) {
+					cout << matrica[i][j] << " ";
+				}
+				cout << endl;
+			}
+		}
+	}
+}
+
+void gts::topolog(vector<vector<int>>& matrica) {
+	if (matrica.empty()) {
+		cout << "no gts found" << endl;
+	}
+	else {
+		if (loop(matrica)) {
+			cout << "error, cycle found " << endl;
+		}
+		else {
+			int numvertices = matrica.size();
+			vector<bool> visited(numvertices, false);
+			stack<int> result;
+			for (int i = 0; i < numvertices; ++i) {
+				if (!visited[i]) {
+					topolog2(matrica, i, visited, result);
+				}
+			}
+			cout << "result: " << endl;
+			while (!result.empty()) {
+				if (result.top() != 0) {
+					cout << result.top() << " ";
+				}
+				result.pop();
+			}
+			cout << endl;
+		}
+	}
+}
+void gts::topolog2(vector<vector<int>>& matrica, int vertex, vector<bool>& visited, stack<int>& result) {
+	visited[vertex] = true;
+	for (int i = 0; i < matrica.size(); ++i) {
+		if (matrica[vertex][i] != 0 && !visited[i]) {
+			topolog2(matrica, i, visited, result);
+		}
+	}
+	result.push(vertex);
+}
+
+bool gts::loop(vector<vector<int>>& matrica) {
+	int numvertices = matrica.size();
+	vector<bool> visited(numvertices, false);
+	std::vector<bool> recursionstack(numvertices, false);
+
+	for (int i = 0; i < numvertices; ++i) {
+		if (loop2(matrica, i, visited, recursionstack)) {
+			return true;
+		}
+	}
+	return false;
+}
+bool gts::loop2(vector<vector<int>>& matrica, int vertex, vector<bool>& visited, vector<bool>& recursionstack) {
+	if (!visited[vertex]) {
+		visited[vertex] = true;
+		recursionstack[vertex] = true;
+		for (int neighbor = 0; neighbor < matrica[vertex].size(); ++neighbor) {
+			if (matrica[vertex][neighbor] != 0) {
+				if (!visited[neighbor] && loop2(matrica, neighbor, visited, recursionstack)) {
+					return true;
+				}
+				else if (recursionstack[neighbor]) {
+					return true;
+				}
+			}
+		}
+	}
+	recursionstack[vertex] = false;
+	return false;
 }

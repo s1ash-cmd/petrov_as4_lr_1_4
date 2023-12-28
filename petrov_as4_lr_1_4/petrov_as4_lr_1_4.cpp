@@ -22,11 +22,13 @@ int main() {
 
 	unordered_map <int, pipe> pipes;
 	unordered_map <int, station> stations;
+	vector <vector <int> > matrica;
 
 	gts sistema;
+
 	for (;;) {
 		sistema.printmenu();
-		int choice = check_input(0, 9);
+		int choice = check_input(0, 14);
 
 		switch (choice) {
 		case 1: {
@@ -44,9 +46,9 @@ int main() {
 		case 3: {
 			sistema.pipe_output(pipes);
 			sistema.station_output(stations);
+			sistema.viewgts(matrica);
 			break;
 		}
-
 		case 4: {
 			sistema.pipe_edit(pipes);
 			break;
@@ -55,22 +57,39 @@ int main() {
 			sistema.station_edit(stations);
 			break;
 		}
-
 		case 6: {
 			sistema.pipe_delete(pipes);
 			break;
 		}
-
 		case 7: {
 			sistema.station_delete(stations);
 			break;
 		}
-
 		case 8: {
-			sistema.data_write(pipes, stations);
+			sistema.combine(stations, pipes, matrica);
 			break;
 		}
 		case 9: {
+			sistema.deleteconnection(pipes, stations, matrica);
+			break;
+		}
+		case 10: {
+			sistema.topolog(matrica);;
+			break;
+		}
+		/*case 11: {
+			sistema.shortestdistance(pipes, stations, matrica);
+			break;
+		}
+		case 12: {
+			sistema.maxflow(pipes, stations, matrica);
+			break;
+		}*/
+		case 13: {
+			sistema.data_write(pipes, stations);
+			break;
+		}
+		case 14: {
 			sistema.data_read(pipes, stations);
 			break;
 		}
@@ -81,6 +100,3 @@ int main() {
 	}
 	return 0;
 }
-
-
-

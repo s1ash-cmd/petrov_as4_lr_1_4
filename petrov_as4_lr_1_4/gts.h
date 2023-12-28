@@ -3,6 +3,7 @@
 #include "station.h"
 
 #include <unordered_map>
+#include <stack>
 
 class gts {
 public:
@@ -20,4 +21,13 @@ public:
 
 	static void data_write(unordered_map <int, pipe> pipes, unordered_map <int, station> stations);
 	static void data_read(unordered_map <int, pipe>& pipes, unordered_map <int, station>& stations);
+
+	static void combine(unordered_map<int, station>& stations, unordered_map<int, pipe>& pipes, vector <vector <int> >& matrica);
+	static void deleteconnection(unordered_map <int, pipe>& pipes, unordered_map<int, station>& stations, vector < vector <int> >& matrica);
+	static void viewgts(vector<vector<int>>& matrica);
+
+	static void topolog(vector<vector<int>>& matrica);
+	static void topolog2(vector<vector<int>>& matrica, int vertex, vector<bool>& visited, stack<int>& result);
+	static bool loop(vector<vector<int>>& matrica);
+	static bool loop2(vector<vector<int>>& matrica, int vertex, vector<bool>& visited, vector<bool>& recursionstack);
 };

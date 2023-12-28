@@ -10,6 +10,7 @@ public:
 	double length = 0;
 	double diameter = 0;
 	bool repair = false;
+	bool used = false;
 
 	static int ID;
 	pipe();
