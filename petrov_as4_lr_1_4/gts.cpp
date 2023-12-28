@@ -398,10 +398,7 @@ void gts::data_read(unordered_map<int, pipe>& pipes, unordered_map<int, station>
 }
 
 void gts::combine(unordered_map <int, station>& stations, unordered_map <int, pipe>& pipes, vector <vector <int> >& matrica) {
-	int idcs1 = 0;
-	int idcs2 = 0;
 	int idp = 0;
-	int piped = 0;
 	if (stations.size() != 0 && stations.size() != 1 && pipes.size() != 0) {
 		station_output(stations);
 		matrica.resize(stations.size() + 1);
